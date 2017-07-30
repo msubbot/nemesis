@@ -1,26 +1,32 @@
+const COLOR_BLACK = "0x000000";
+const COLOR_WHITE = "0xffffff";
+
+const SPHERE_DIAMETER = 50;
+
+const SIZE = 10;
+
+var controlSphereArray = new Array(SIZE);
+for(var i = 0; i < SIZE; i++)
+    controlSphereArray[i] = {
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        positionX: 0,
+        positionY: 0,
+        positionZ: 0
+    };
+
+function randomDirection (){
+    for(var i = 0; i < SIZE; i++) {
+        controlSphereArray[i].positionX = Math.random() * (5 - (-5) -5);
+        controlSphereArray[i].positionY = Math.random() * (5 - (-5) -5);
+    }
+};
+
 window.onload = function () {
     var width = window.innerWidth;
-    var height = window.innerHeight;
+    var height = window.innerHeight - 30;
     var canvas = document.getElementById('canvas');
-
-    const COLOR_BLACK = "0x000000";
-    const COLOR_WHITE = "0xffffff";
-    const COLOR_MATRIX = "0x00ff00";
-
-    const SPHERE_DIAMETER = 50;
-
-    const SIZE = 10;
-
-    var controlSphereArray = new Array(SIZE);
-    for(var i = 0; i < SIZE; i++)
-        controlSphereArray[i] = {
-            rotationX: 0,
-            rotationY: 0,
-            rotationZ: 0,
-            positionX: 0,
-            positionY: 0,
-            positionZ: 0
-        };
 
     var folderArray = new Array(SIZE);
     var gui = new dat.GUI();
@@ -33,7 +39,6 @@ window.onload = function () {
         folderArray[i].add(controlSphereArray[i], "rotationY").min(-0.2).max(0.2).step(0.001);
         folderArray[i].add(controlSphereArray[i], "rotationZ").min(-0.2).max(0.2).step(0.001);
     }
-
 
     canvas.setAttribute("width", width);
     canvas.setAttribute("height", height);
@@ -64,27 +69,16 @@ window.onload = function () {
         meshArray[i].position.z = 0;
         scene.add(meshArray[i]);
     }
-
     renderer.render(scene, camera);
-
-    var randomDirection = function (){
-        for(var i = 0; i < SIZE; i++)
-            controlSphereArray[i] = {
-                positionX: 2,
-                positionY: 2
-            };
-    };
-    //randomDirection();
-    //gui.add(text, "randomDirection");
 
     function rendering() {
         for(var i = 0; i < SIZE; i++) {
             // Mesh Position //
             meshArray[i].position.x += controlSphereArray[i].positionX;
-            if ((meshArray[i].position.x > width / 2 - SPHERE_DIAMETER) || (meshArray[i].position.x < -width / 2 + SPHERE_DIAMETER))
+            if ((meshArray[i].position.x >= width / 2 - SPHERE_DIAMETER) || (meshArray[i].position.x <= -width / 2 + SPHERE_DIAMETER))
                 controlSphereArray[i].positionX = -controlSphereArray[i].positionX;
             meshArray[i].position.y += controlSphereArray[i].positionY;
-            if ((meshArray[i].position.y > height / 2 - SPHERE_DIAMETER) || (meshArray[i].position.y < -height / 2 + SPHERE_DIAMETER))
+            if ((meshArray[i].position.y >= height / 2 - SPHERE_DIAMETER) || (meshArray[i].position.y <= -height / 2 + SPHERE_DIAMETER))
                 controlSphereArray[i].positionY = -controlSphereArray[i].positionY;
             meshArray[i].position.z += controlSphereArray[i].positionZ;
             // Mesh Rotation //
